@@ -11,7 +11,7 @@ from tqdm import tqdm
 
 from utils import create_manifest
 
-VOXFORGE_URL_16kHz = 'http://www.repository.voxforge1.org/downloads/SpeechCorpus/Trunk/Audio/Main/16kHz_16bit/'
+VOXFORGE_URL_16kHz = 'http://www.repository.voxforge1.org/downloads/Russian/Trunk/Audio/Main/16kHz_16bit/'
 
 parser = argparse.ArgumentParser(description='Processes and downloads VoxForge dataset.')
 parser.add_argument("--target-dir", default='voxforge_dataset/', type=str, help="Directory to store the dataset.")
