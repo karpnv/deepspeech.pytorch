@@ -321,8 +321,6 @@ if __name__ == '__main__':
 				
 				
 				#####DEBUG
-                print(inputs)
-                print(data)
                 print(decoded_output)
                 print(target_strings)
 				####
