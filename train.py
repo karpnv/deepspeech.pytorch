@@ -310,13 +310,7 @@ if __name__ == '__main__':
                 for size in target_sizes:
                     split_targets.append(targets[offset:offset + size])
                     offset += size
-				
-				####DEBUG
-                print(split_targets)
-				#####
-				
-				
-				
+
                 if args.cuda:
                     inputs = inputs.cuda()
 
@@ -324,6 +318,16 @@ if __name__ == '__main__':
 
                 decoded_output, _ = decoder.decode(out.data, output_sizes)
                 target_strings = decoder.convert_to_strings(split_targets)
+				
+				
+				#####DEBUG
+                print(decoded_output)
+                print(target_strings)
+				####
+				
+				
+				
+				
                 wer, cer = 0, 0
                 for x in range(len(target_strings)):
                     transcript, reference = decoded_output[x][0], target_strings[x][0]
