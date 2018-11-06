@@ -74,9 +74,9 @@ def prepare_sample(recording_name, url, target_folder):
                 if transcription_key not in transcriptions:
                     continue
                 utterance = transcriptions[transcription_key]
-				utterance = re.sub('[!,?#^()%.+-:;]', '', utterance)
-				utterance = re.sub('[  ]', ' ', utterance)
-				utterance = re.sub('[  ]', ' ', utterance)
+                utterance = re.sub('[!,?#^()%.+-:;]', '', utterance)
+                utterance = re.sub('[  ]', ' ', utterance)
+                utterance = re.sub('[  ]', ' ', utterance)
 
 
                 target_wav_file = os.path.join(wav_dir, "{}_{}.wav".format(recording_name, recording_id))
