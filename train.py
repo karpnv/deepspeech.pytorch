@@ -175,7 +175,7 @@ if __name__ == '__main__':
                     }
                     tensorboard_writer.add_scalars(args.id, values, i + 1)
     else:
-        with open(args.labels_path) as label_file:
+        with open(args.labels_path, encoding='utf-8') as label_file:
             labels = str(''.join(json.load(label_file)))
 
         audio_conf = dict(sample_rate=args.sample_rate,
