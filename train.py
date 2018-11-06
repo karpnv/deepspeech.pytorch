@@ -310,7 +310,13 @@ if __name__ == '__main__':
                 for size in target_sizes:
                     split_targets.append(targets[offset:offset + size])
                     offset += size
-
+				
+				####DEBUG
+                print(split_targets)
+				#####
+				
+				
+				
                 if args.cuda:
                     inputs = inputs.cuda()
 
