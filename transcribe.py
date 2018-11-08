@@ -45,10 +45,11 @@ def decode_results(model, decoded_output, decoded_offsets):
 
     for b in range(len(decoded_output)):
         for pi in range(min(args.top_paths, len(decoded_output[b]))):
-            result = {'transcription': u"{}".format(decoded_output[b][pi])}
+            result = {'transcription': decoded_output[b][pi]}
             if args.offsets:
-                result['offsets'] = u"{}".format(decoded_offsets[b][pi]).tolist()
+                result['offsets'] = decoded_offsets[b][pi].tolist()
             results['output'].append(result)
+			results = u"{}".format(str(results))
     return results
 
 
@@ -85,4 +86,4 @@ if __name__ == '__main__':
     parser = SpectrogramParser(audio_conf, normalize=True)
 
     decoded_output, decoded_offsets = transcribe(args.audio_path, parser, model, decoder, args.cuda)
-    print(json.dumps(decode_results(model, decoded_output, decoded_offsets)))
+    print(decode_results(model, decoded_output, decoded_offsets))
