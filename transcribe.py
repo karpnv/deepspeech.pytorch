@@ -49,7 +49,7 @@ def decode_results(model, decoded_output, decoded_offsets):
             if args.offsets:
                 result['offsets'] = decoded_offsets[b][pi].tolist()
             results['output'].append(result)
-			results = u"{}".format(str(results))
+            results = u"{}".format(str(results))
     return results
 
 
