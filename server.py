@@ -6,9 +6,9 @@ from flask import Flask, request, jsonify
 import logging
 from data.data_loader import SpectrogramParser
 from decoder import GreedyDecoder
-from model import DeepSpeech
 from opts import add_decoder_args, add_inference_args
 from transcribe import transcribe
+from utils import load_model
 
 app = Flask(__name__)
 ALLOWED_EXTENSIONS = set(['.wav', '.mp3', '.ogg', '.webm'])
@@ -32,7 +32,7 @@ def transcribe_file():
         with NamedTemporaryFile(suffix=file_extension) as tmp_saved_audio_file:
             file.save(tmp_saved_audio_file.name)
             logging.info('Transcribing file...')
-            transcription, _ = transcribe(tmp_saved_audio_file.name, spect_parser, model, decoder, args.cuda)
+            transcription, _ = transcribe(tmp_saved_audio_file.name, spect_parser, model, decoder, device)
             logging.info('File transcribed')
             res['status'] = "OK"
             res['transcription'] = transcription
@@ -41,7 +41,7 @@ def transcribe_file():
 
 def main():
     import argparse
-    global model, spect_parser, decoder, args
+    global model, spect_parser, decoder, args, device
     parser = argparse.ArgumentParser(description='DeepSpeech transcription server')
     parser.add_argument('--host', type=str, default='0.0.0.0', help='Host to be used by the server')
     parser.add_argument('--port', type=int, default=8888, help='Port to be used by the server')
@@ -52,24 +52,19 @@ def main():
 
     logging.info('Setting up server...')
     torch.set_grad_enabled(False)
-    model = DeepSpeech.load_model(args.model_path)
-    if args.cuda:
-        model.cuda()
-    model.eval()
-
-    labels = DeepSpeech.get_labels(model)
-    audio_conf = DeepSpeech.get_audio_conf(model)
+    device = torch.device("cuda" if args.cuda else "cpu")
+    model = load_model(device, args.model_path, args.cuda)
 
     if args.decoder == "beam":
         from decoder import BeamCTCDecoder
 
-        decoder = BeamCTCDecoder(labels, lm_path=args.lm_path, alpha=args.alpha, beta=args.beta,
+        decoder = BeamCTCDecoder(model.labels, lm_path=args.lm_path, alpha=args.alpha, beta=args.beta,
                                  cutoff_top_n=args.cutoff_top_n, cutoff_prob=args.cutoff_prob,
                                  beam_width=args.beam_width, num_processes=args.lm_workers)
     else:
-        decoder = GreedyDecoder(labels, blank_index=labels.index('_'))
+        decoder = GreedyDecoder(model.labels, blank_index=model.labels.index('_'))
 
-    spect_parser = SpectrogramParser(audio_conf, normalize=True)
+    spect_parser = SpectrogramParser(model.audio_conf, normalize=True)
     logging.info('Server initialised')
     app.run(host=args.host, port=args.port, debug=True, use_reloader=False)
 
