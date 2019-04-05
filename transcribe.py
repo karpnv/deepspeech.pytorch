@@ -76,5 +76,6 @@ if __name__ == '__main__':
         decoder = GreedyDecoder(model.labels, blank_index=model.labels.index('_'))
 
     parser = SpectrogramParser(model.audio_conf, normalize=True)
-    decoded_output, decoded_offsets = transcribe(args.audio_path, parser, model, decoder, args.cuda)
+
+    decoded_output, decoded_offsets = transcribe(args.audio_path, parser, model, decoder, device)
     print(decode_results(model, decoded_output, decoded_offsets))
