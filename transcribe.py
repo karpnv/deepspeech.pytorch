@@ -15,6 +15,13 @@ from model import DeepSpeech
 import os.path
 import json
 
+parser = argparse.ArgumentParser(description='DeepSpeech transcription')
+parser = add_inference_args(parser)
+parser.add_argument('--audio-path', default='audio.wav',
+                        help='Audio file to predict on')
+parser.add_argument('--offsets', dest='offsets', action='store_true', help='Returns time offset information')
+parser = add_decoder_args(parser)
+args = parser.parse_args()
 
 def decode_results(model, decoded_output, decoded_offsets):
     results = {
@@ -56,13 +63,6 @@ def transcribe(audio_path, parser, model, decoder, device):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='DeepSpeech transcription')
-    parser = add_inference_args(parser)
-    parser.add_argument('--audio-path', default='audio.wav',
-                        help='Audio file to predict on')
-    parser.add_argument('--offsets', dest='offsets', action='store_true', help='Returns time offset information')
-    parser = add_decoder_args(parser)
-    args = parser.parse_args()
     device = torch.device("cuda" if args.cuda else "cpu")
     model = load_model(device, args.model_path, args.cuda)
 
