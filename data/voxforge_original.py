@@ -11,10 +11,10 @@ from tqdm import tqdm
 
 from utils import create_manifest
 
-VOXFORGE_URL_16kHz = 'http://www.repository.voxforge1.org/downloads/Russian/Trunk/Audio/Main/16kHz_16bit/'
+VOXFORGE_URL_16kHz = 'http://www.repository.voxforge1.org/downloads/Russian/Trunk/Audio/Original/16kHz_16bit/'
 
 parser = argparse.ArgumentParser(description='Processes and downloads VoxForge dataset.')
-parser.add_argument("--target-dir", default='voxforge_dataset/', type=str, help="Directory to store the dataset.")
+parser.add_argument("--target-dir", default='voxforge_dataset_original/', type=str, help="Directory to store the dataset.")
 parser.add_argument('--sample-rate', default=16000,
                     type=int, help='Sample rate')
 parser.add_argument('--min-duration', default=1, type=int,
@@ -106,4 +106,4 @@ if __name__ == '__main__':
     for f in tqdm(all_files, total=len(all_files)):
         prepare_sample(f.replace(".tgz", ""), VOXFORGE_URL_16kHz + f, target_dir)
     print('Creating manifests...')
-    create_manifest(target_dir, 'voxforge_train_manifest.csv', args.min_duration, args.max_duration)
+    create_manifest(target_dir, 'voxforge_train_manifest_original.csv', args.min_duration, args.max_duration)
