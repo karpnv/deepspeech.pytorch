@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Uploads</title>
+</head>
+<body>
+
+    <h3>Recognize DeepSpeech2</h3>
+    <h4>File should be .wav, .mp3, .ogg, .webm with 16000 Hz sample rate</h4>
+    <form action="/transcribe" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <button type="submit">Загрузить</button>
+    </form>
+</body>
+</html>

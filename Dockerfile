@@ -24,6 +24,7 @@ RUN git clone --recursive https://github.com/parlance/ctcdecode.git
 RUN cd ctcdecode; pip install .
 
 ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+ENV PYTHONIOENCODING=utf-8
 
 # install apex
 RUN git clone --recursive https://github.com/NVIDIA/apex.git

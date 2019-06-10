@@ -2,16 +2,22 @@ import os
 from tempfile import NamedTemporaryFile
 
 import torch
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import logging
 from data.data_loader import SpectrogramParser
 from decoder import GreedyDecoder
 from opts import add_decoder_args, add_inference_args
 from transcribe import transcribe
 from utils import load_model
+from transcribe import decode_results
 
 app = Flask(__name__)
 ALLOWED_EXTENSIONS = set(['.wav', '.mp3', '.ogg', '.webm'])
+
+@app.route("/", methods=["POST", "GET"])
+def index():
+    args1 = {"method": "GET"}
+    return render_template("index.html", args=args1)
 
 
 @app.route('/transcribe', methods=['POST'])
@@ -32,11 +38,13 @@ def transcribe_file():
         with NamedTemporaryFile(suffix=file_extension) as tmp_saved_audio_file:
             file.save(tmp_saved_audio_file.name)
             logging.info('Transcribing file...')
-            transcription, _ = transcribe(tmp_saved_audio_file.name, spect_parser, model, decoder, device)
-            logging.info('File transcribed')
-            res['status'] = "OK"
-            res['transcription'] = transcription
-            return jsonify(res)
+            transcription, decoded_offsets = transcribe(tmp_saved_audio_file.name, spect_parser, model, decoder, device)
+            # logging.info('File transcribed')
+            # res['status'] = "OK"
+            # res['transcription'] = transcription
+            # return jsonify(res)
+
+            return decode_results(model, transcription, decoded_offsets)
 
 
 def main():

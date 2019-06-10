@@ -7,6 +7,7 @@ df = pd.read_csv(csv_name)
 df = df.drop('wav_filesize', axis = 1)
 df['wav_filename'] = df['wav_filename'].apply(lambda x: pwd+x[26:])
 for index, row in df.iterrows():
-    open(row['wav_filename'][:-4]+'.txt', "w").write(row['transcript'])
+    content = open(row['wav_filename'][:-4]+'.txt', "wb")
+    content.write(row['transcript'].encode('utf-8'))
     row['transcript'] = row['wav_filename'][:-4]+'.txt'
 df.to_csv(csv_name, index=False, header=False)
